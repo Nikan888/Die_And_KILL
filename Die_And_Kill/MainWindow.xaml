@@ -15,6 +15,21 @@
         <ImageBrush ImageSource="{DynamicResource Beach}" />
     </Window.Background>
     <Grid>
-        
+        <Canvas Name="MyCanvas" Margin="0,115,0,0">
+
+            <!--<Canvas.LayoutTransform>
+            <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+        </Canvas.LayoutTransform>-->
+
+
+        </Canvas>
+        <!--Add interface for users-->
+        <Label Name="lb" FontSize="30" Canvas.Left="433" Canvas.Top="-73" Height="147" Width="401" Margin="624,26,47,517"/>
+        <Button Name="bazookabtn" Content="Bazooka" FontSize="32" Canvas.Left="150" Width="133"  Height="60" Margin="46,14,893,616"/>
+        <Button Name="bat" Content="Bat" FontSize="32" Canvas.Left="318" Width="133"  Height="60"  Margin="215,14,724,616" />
+        <Rectangle  Visibility="Hidden" Name="potencia2" Fill="Gray" Height="33" Canvas.Left="38" Stroke="Black" Width="auto" Margin="33,600,33,10"/>
+        <Rectangle Visibility="Hidden" Name="potencia" Fill="Red" Height="33" Width="auto" Canvas.Left="38" Stroke="Black"  Margin="33,600,990,10"/>
+        <Button Name="airstrike" Content="Airstrike" FontSize="32" Width="133"  Height="60"  Margin="383,14,556,616" />
+        <!--<Image Name="explosion" Height="150" />-->
     </Grid>
 </Window>
