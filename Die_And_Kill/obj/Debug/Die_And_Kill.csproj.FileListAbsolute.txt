@@ -1,0 +1,17 @@
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.csprojResolveAssemblyReference.cache
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\MainWindow.g.cs
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\App.g.cs
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill_MarkupCompile.cache
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill_MarkupCompile.lref
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\Die_And_Kill.exe.config
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\Die_And_Kill.exe
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\Die_And_Kill.pdb
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\Logic.dll
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\Logic.pdb
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\MainWindow.baml
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.g.resources
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.Properties.Resources.resources
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.csproj.GenerateResource.Cache
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.csproj.CoreCompileInputs.cache
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.exe
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.pdb

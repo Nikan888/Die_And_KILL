@@ -1,0 +1,5 @@
+D:\repos\Die_And_KILL\Logic\bin\Debug\Logic.dll
+D:\repos\Die_And_KILL\Logic\bin\Debug\Logic.pdb
+D:\repos\Die_And_KILL\Logic\obj\Debug\Logic.csproj.CoreCompileInputs.cache
+D:\repos\Die_And_KILL\Logic\obj\Debug\Logic.dll
+D:\repos\Die_And_KILL\Logic\obj\Debug\Logic.pdb

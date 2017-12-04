@@ -91,5 +91,26 @@ namespace Logic
             }
             return result;
         }
+
+        public void Add(Coordinate coordinate, string element)
+        {
+            if (grid[coordinate.x, coordinate.y] == "0")
+            {
+                grid[coordinate.x, coordinate.y] = element;
+            }
+
+        }
+
+        public Coordinate GetGround(int x)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (grid[x, y] == "1")
+                {
+                    return new Coordinate(x, y);
+                }
+            }
+            return new Coordinate(x, height - 1);
+        }
     }
 }
