@@ -11,12 +11,12 @@ namespace Logic
         public int hp = 100;
         public Coordinate position;
         public string name;
-        public teams equipo;
+        public teams equip;
 
-        public Worm(Random r, string name, teams equipo, List<Coordinate> pisable)
+        public Worm(Random r, string name, teams equip, List<Coordinate> pisable)
         {
             this.name = name;
-            this.equipo = equipo;
+            this.equip = equip;
             this.position = pisable[r.Next(0, pisable.Count)];
 
         }
