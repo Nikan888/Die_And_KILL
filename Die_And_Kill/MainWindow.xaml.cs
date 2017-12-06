@@ -128,7 +128,7 @@ public partial class MainWindow : Window
         {
             #region #region LoadFloat
             var converter = new ImageSourceConverter();
-            var source = (ImageSource)converter.ConvertFromString(@"..\..\..\gifs\block.jpg");
+            var source = (ImageSource)converter.ConvertFromString(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\Block.jpg");
             blocks = new Image[core.map.weight, core.map.height];
             for (int x = 0; x < core.map.weight; x++)
             {
@@ -162,7 +162,7 @@ public partial class MainWindow : Window
 
                 var image = new BitmapImage();
                 image.BeginInit();
-                image.UriSource = new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\..\\gifs\\9.gif");
+                image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\9.gif");
                 image.EndInit();
                 ImageBehavior.SetAnimatedSource(worms[i].icon, image);
 

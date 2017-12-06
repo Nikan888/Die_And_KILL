@@ -15,3 +15,7 @@ D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.csproj.GenerateResourc
 D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.csproj.CoreCompileInputs.cache
 D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.exe
 D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\Die_And_Kill.pdb
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\WpfAnimatedGif.dll
+D:\repos\Die_And_KILL\Die_And_Kill\bin\Debug\WpfAnimatedGif.xml
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\UserControlWorms.g.cs
+D:\repos\Die_And_KILL\Die_And_Kill\obj\Debug\UserControlWorms.baml
