@@ -44,10 +44,11 @@ namespace Die_And_Kill
         }
     }
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
     {
         public Core core = new Core();
         public Random randy = new Random();
@@ -86,7 +87,7 @@ public partial class MainWindow : Window
 
             airstrike.Click += airstrike_Click;
 
-            ChangeOfShift();           
+            ChangeOfShift();
         }
 
         private void airstrike_Click(object sender, RoutedEventArgs e)
@@ -121,7 +122,66 @@ public partial class MainWindow : Window
 
         private void Updater(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            #region Control for wrap
+            if(wraper.Count != 0)
+            {
+                List<Tuple<Image, Wrap>> toDelete = new List<Tuple<Image, Wrap>>();
+                foreach (Tuple<Image, Wrap> p in wraper)
+                {
+                    p.Item2.CanvasPosX += p.Item2.SpeedX * 0.001;
+                    p.Item2.CanvasPosY += p.Item2.SpeedY * 0.001;
+                    p.Item2.SpeedY += gravity * 0.001;
+                    Canvas.SetLeft(p.Item1, p.Item2.CanvasPosX);
+                    Canvas.SetTop(p.Item1, p.Item2.CanvasPosY);
+                    
+                    var controller = ImageBehavior.GetAnimationController(p.Item1);
+                    var angle = Math.Atan((p.Item2.SpeedY) / (p.Item2.SpeedX)) + (Math.PI / 2);
+                    var frame = 0.0;
+                    if (p.Item2.SpeedX > 0)
+                    {
+                        frame = (angle * 16) / (Math.PI);
+                    }
+                    else
+                    {
+                        frame = (angle * 16) / (Math.PI) + 16;
+                    }
+                    controller.GotoFrame((int)frame);
+
+
+                    var gridx = (int)((p.Item2.CanvasPosX + 15) / 30.0);
+                    var gridy = (int)((p.Item2.CanvasPosY + 15) / 30.0);
+                    var element = "";
+                    try
+                    {
+                        element = core.map.grid[gridx, gridy];
+                    }
+                    catch
+                    {
+                        element = "0";
+                    }
+                    if (element != "0") 
+                    {
+                        User(p.Item2.CanvasPosX, p.Item2.CanvasPosY, p.Item2.radio, p.Item2.dano);
+                        MyCanvas.Children.Remove(p.Item1);
+                        toDelete.Add(p);
+                        ChangeOfShift();
+                    }
+
+                    if (p.Item2.CanvasPosY > 600)
+                    {
+                        MyCanvas.Children.Remove(p.Item1);
+                        toDelete.Add(p);
+                        ChangeOfShift();
+                        break;
+                    }
+                }
+                //Deleting from wrapper
+                foreach (Tuple<Image, Wrap> p in toDelete)
+                {
+                    wraper.Remove(p);
+                }
+            }
+            #endregion
         }
 
         public void LoadMap()
@@ -184,6 +244,36 @@ public partial class MainWindow : Window
         }
 
         public void ChangeOfShift()
+        {
+            //Return the appearance to the worm that become inactive 
+            var worm = turns.Dequeue();
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\9.gif");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(worm.icon, image);
+            turns.Enqueue(worm);
+
+            //Make active stati of worm
+            worm = turns.Peek();
+            image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\19.gif");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(worm.icon, image);
+        }
+
+        private void User(double xpos, double ypos, double radio, double dano)
+        {
+
+        }
+
+        private void MoveLeft(UserControlWorms worm)
+        {
+
+        }
+
+        private void MoveRight(UserControlWorms worm)
         {
 
         }
