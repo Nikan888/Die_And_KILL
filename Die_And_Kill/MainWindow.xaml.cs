@@ -92,32 +92,228 @@ namespace Die_And_Kill
 
         private void airstrike_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            Wrap p;
+            for (int i = 0; i < 350; i = i + 100)
+            {
+                p = new Wrap(-100, 0, turns.Peek().CanvasXPos + i, 10, 40, 40);
+                Image img = new Image();
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\bazooka.gif");
+                image.EndInit();
+                ImageBehavior.SetAnimatedSource(img, image);
+                Canvas.SetTop(img, p.CanvasPosY);
+                Canvas.SetLeft(img, p.CanvasPosX);
+                MyCanvas.Children.Add(img);
+
+                wraper.Add(new Tuple<Image, Wrap>(img, p));
+            }
         }
 
         private void SelectBat(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            potencia.Visibility = System.Windows.Visibility.Visible;
+            potencia2.Visibility = System.Windows.Visibility.Visible;
+            var worm = turns.Peek();
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\bat.gif");
+            image.EndInit();
+            ImageBehavior.SetAnimatedSource(worm.icon, image);
+            BatControl.Start();
         }
 
         private void SelectBazooka(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            if (wraper.Count == 0)
+            {
+                potencia.Visibility = System.Windows.Visibility.Visible;
+                potencia2.Visibility = System.Windows.Visibility.Visible;
+
+                var worm = turns.Peek();
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\16.gif");
+                image.EndInit();
+                ImageBehavior.SetAnimatedSource(worm.icon, image);
+                BazookaControl.Start();
+            }
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.Key == Key.Up)
+            {
+                if (!turns.Peek().onAir)
+                    turns.Peek().yspeed = transitionSpeed;
+            }
+            if (e.Key == Key.Down)
+                    turns.Enqueue(turns.Dequeue());
+            if (e.Key == Key.Left)
+                MoveLeft(turns.Peek());
+            if (e.Key == Key.Right)
+                MoveRight(turns.Peek());
+
         }
 
         private void UpdaterForBat(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var mousePosX = Mouse.GetPosition(MyCanvas).X;
+            var mousePosY = Mouse.GetPosition(MyCanvas).Y - 80;
+            var batPosX = turns.Peek().CanvasXPos + 15;
+            var batPosY = turns.Peek().CanvasYPos - 30;
+
+            #region Angulo de ataque
+            var controller = ImageBehavior.GetAnimationController(turns.Peek().icon);
+
+            var angle = Math.Atan((mousePosY - batPosY) / (mousePosX - batPosX)) + (Math.PI / 2); // va de 0 a Pi
+            var frame = 0.0;
+            if (mousePosX < batPosX)
+            {
+                frame = (angle * 31) / (Math.PI);
+                ScaleTransform scale = new ScaleTransform();
+
+                scale.ScaleX = 1;
+                scale.CenterX = 45;
+                TransformGroup myTransformGroup = new TransformGroup();
+                myTransformGroup.Children.Add(scale);
+                turns.Peek().icon.RenderTransform = myTransformGroup;
+                try
+                {
+                    controller.GotoFrame((int)frame);
+                }
+                catch { }
+
+            }
+            else
+            {
+                ScaleTransform scale = new ScaleTransform();
+                scale.ScaleX = -1;
+                scale.CenterX = 45;
+                TransformGroup myTransformGroup = new TransformGroup();
+                myTransformGroup.Children.Add(scale);
+                turns.Peek().icon.RenderTransform = myTransformGroup;
+                frame = -1 * (((angle * 31) / (Math.PI)) - 14) + 17;
+                controller.GotoFrame((int)frame);
+            }
+            #endregion
+            #region Barra de Potencia
+
+
+            var speedx = mousePosX - batPosX;
+            var speedy = mousePosY - batPosY;
+            var speed = Math.Sqrt(Math.Pow(speedx, 2) + Math.Pow(speedy, 2));
+            var barraPotencia = (160.0 / speed) * 950;
+            //lb.Content = barraPotencia;
+            if (barraPotencia >= 33)
+            {
+                potencia.Margin = new Thickness(33, 600, barraPotencia, 10);
+            }
+            #endregion
+            #region Batear
+
+
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                potencia.Visibility = System.Windows.Visibility.Hidden;
+                potencia2.Visibility = System.Windows.Visibility.Hidden;
+                //Dañar worms cercanos
+                foreach (UserControlWorms w in worms)
+                {
+                    if (w == turns.Peek())
+                        continue;
+                    if (Math.Sqrt(Math.Pow(w.CanvasXPos - batPosX, 2) + Math.Pow(w.CanvasYPos - batPosY, 2)) < 60)
+                    {
+                        w.worm.hp -= 20;
+                        var xspeed = (mousePosX - batPosX) * 10;
+                        var yspeed = (mousePosY - batPosY) * 10;
+                        var maxspeed = 6000;
+                        if (Math.Sqrt(Math.Pow(xspeed, 2) + Math.Pow(yspeed, 2)) > maxspeed)
+                        {
+                            xspeed = (xspeed / Math.Sqrt(Math.Pow(xspeed, 2) + Math.Pow(yspeed, 2))) * maxspeed;
+                            yspeed = (yspeed / Math.Sqrt(Math.Pow(xspeed, 2) + Math.Pow(yspeed, 2))) * maxspeed;
+                        }
+                        w.xspeed = xspeed;
+                        w.yspeed = yspeed;
+
+                    }
+                }
+                BatControl.Stop();
+                ChangeOfShift();
+
+            }
+            #endregion
         }
 
         private void UpdaterForBazooka(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            var mousePosX = Mouse.GetPosition(MyCanvas).X;
+            var mousePosY = Mouse.GetPosition(MyCanvas).Y - 80;
+            var bazookaPosX = turns.Peek().CanvasXPos + 15;
+            var bazookaPosY = turns.Peek().CanvasYPos - 30;
+            // Angulo de ataque
+            var controller = ImageBehavior.GetAnimationController(turns.Peek().icon);
+
+            var angle = Math.Atan((mousePosY - bazookaPosY) / (mousePosX - bazookaPosX)) + (Math.PI / 2); // va de 0 a Pi
+            var frame = 0.0;
+            if (mousePosX < bazookaPosX)
+            {
+                frame = (angle * 31) / (Math.PI);
+                ScaleTransform scale = new ScaleTransform();
+
+                scale.ScaleX = 1;
+                scale.CenterX = 45;
+                TransformGroup myTransformGroup = new TransformGroup();
+                myTransformGroup.Children.Add(scale);
+                turns.Peek().icon.RenderTransform = myTransformGroup;
+                controller.GotoFrame((int)frame);
+            }
+            else
+            {
+                ScaleTransform scale = new ScaleTransform();
+                scale.ScaleX = -1;
+                scale.CenterX = 45;
+                TransformGroup myTransformGroup = new TransformGroup();
+                myTransformGroup.Children.Add(scale);
+                turns.Peek().icon.RenderTransform = myTransformGroup;
+                frame = -1 * (((angle * 31) / (Math.PI)) - 14) + 17;
+                controller.GotoFrame((int)frame);
+            }
+            //Barra de potencia
+
+            var speedx = mousePosX - bazookaPosX;
+            var speedy = mousePosY - bazookaPosY;
+            var speed = Math.Sqrt(Math.Pow(speedx, 2) + Math.Pow(speedy, 2));
+            var barraPotencia = (160.0 / speed) * 950;
+            //lb.Content = barraPotencia;
+            if (barraPotencia >= 33)
+            {
+                potencia.Margin = new Thickness(33, 600, barraPotencia, 10);
+            }
+
+
+
+            //lb.Content = "frame = " + frame;
+            if (Mouse.LeftButton == MouseButtonState.Pressed && wraper.Count == 0)
+            {
+                potencia.Visibility = System.Windows.Visibility.Hidden;
+                potencia2.Visibility = System.Windows.Visibility.Hidden;
+
+                Wrap p = new Wrap(speedx, speedy, turns.Peek().CanvasXPos, turns.Peek().CanvasYPos, 90, 40);
+                Image img = new Image();
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\bazooka.gif");
+                image.EndInit();
+                ImageBehavior.SetAnimatedSource(img, image);
+                Canvas.SetTop(img, p.CanvasPosY);
+                Canvas.SetLeft(img, p.CanvasPosX);
+                MyCanvas.Children.Add(img);
+
+                wraper.Add(new Tuple<Image, Wrap>(img, p));
+                BazookaControl.Stop();
+
+            }
         }
 
         private void Updater(object sender, EventArgs e)
@@ -175,12 +371,96 @@ namespace Die_And_Kill
                         break;
                     }
                 }
-                //Deleting from wrapper
+                //Deleting from wraper
                 foreach (Tuple<Image, Wrap> p in toDelete)
                 {
                     wraper.Remove(p);
                 }
             }
+            #endregion
+            #region Control Worms
+            List<UserControlWorms> toDelete2 = new List<UserControlWorms>();
+            foreach (UserControlWorms w in worms)
+            {
+                #region Control Air
+                if (w.yspeed != 0 || w.onAir || true)
+                {
+                    w.onAir = true;
+                    if (Keyboard.IsKeyDown(Key.Left) && w.Equals(turns.Peek()))
+                        MoveLeft(w);
+                    if (Keyboard.IsKeyDown(Key.Right) && w.Equals(turns.Peek()))
+                        MoveRight(w);
+                    try
+                    {
+                        if (core.map.grid[(int)((w.CanvasXPos + 15.0) / 30.0), (int)((w.CanvasYPos + 68) / 30.0)] != "1" || w.yspeed < 0)
+                        {
+                            if (w.yspeed < 0 && core.map.grid[(int)((w.CanvasXPos + 15.0) / 30.0), 
+                                (int)((w.CanvasYPos + 30) / 30.0)] == "1")
+                                w.yspeed = 0;
+                            w.CanvasYPos += w.yspeed * 0.001;
+                            Canvas.SetTop(w, w.CanvasYPos);
+                            if ((w.xspeed > 0 && (core.map.grid[(int)(w.CanvasXPos + 31) / 30, 
+                                (int)(w.CanvasYPos + 30) / 30] != "1")) || (w.xspeed < 0 && (core.map.grid[(int)(w.CanvasXPos - 1) / 30, 
+                                (int)(w.CanvasYPos + 30) / 30] != "1")))
+                            {
+                                w.CanvasXPos += w.xspeed * 0.001;
+                                Canvas.SetLeft(w, w.CanvasXPos);
+                            }
+                            w.yspeed += gravity * 0.001;
+                        }
+                        else
+                        {
+                            w.onAir = false;
+                            w.yspeed = 0;
+                            w.xspeed = 0;
+                        }
+                    }
+                    catch
+                    {
+                        if (w == turns.Peek())
+                            ChangeOfShift();
+                        MyCanvas.Children.Remove(w);
+                        turns = ExtensionMethods.RemoveFromQueue(w, turns);
+                        toDelete2.Add(w);
+                    }
+                }
+                #endregion
+                #region Control Hp
+                if (w.worm.hp <= 0)
+                {
+                    User(w.CanvasXPos, w.CanvasYPos, 60, 10);
+                    MyCanvas.Children.Remove(w);
+                    turns = ExtensionMethods.RemoveFromQueue(w, turns);
+                    toDelete2.Add(w);
+                }
+                else
+                {
+                    w.HP.Content = w.worm.hp;
+                }
+
+                #endregion
+            }
+            //Deleting worms:
+            foreach (UserControlWorms w in toDelete2)
+            {
+                worms.Remove(w);
+            }
+            #endregion
+            #region Control de Victoria
+            bool victoriaRojo = true;
+            bool victoriaAzul = true;
+            foreach (UserControlWorms w in worms)
+            {
+                if (w.worm.equip == Team.teams.blue)
+                    victoriaRojo = false;
+                else victoriaAzul = false;
+            }
+            if (victoriaRojo || victoriaAzul)
+            {
+                Victory();
+            }
+
+
             #endregion
         }
 
@@ -265,17 +545,94 @@ namespace Die_And_Kill
 
         private void User(double xpos, double ypos, double radio, double dano)
         {
+            Image explosion = new Image();
 
+            MyCanvas.Children.Add(explosion);
+            var image = new BitmapImage();
+            image.BeginInit();
+            image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\explotion.gif");
+            image.EndInit();
+
+            ImageBehavior.SetAnimatedSource(explosion, image);
+            Canvas.SetLeft(explosion, xpos - 50);
+            Canvas.SetTop(explosion, ypos);
+            ImageBehavior.SetRepeatBehavior(explosion, new System.Windows.Media.Animation.RepeatBehavior(TimeSpan.FromMilliseconds(530)));
+            //ImageBehavior.AnimationCompletedEvent.
+
+
+            foreach (UserControlWorms w in worms)
+            {
+                if (Math.Sqrt((w.CanvasXPos - xpos) * (w.CanvasXPos - xpos) + (w.CanvasYPos - ypos) * (w.CanvasYPos - ypos)) < radio)
+                {
+                    w.worm.hp -= (int)dano;
+                }
+            }
+
+            //Destruction of bricks
+            for (int x = 0; x < core.map.weight; x++)
+            {
+                for (int y = 0; y < core.map.height; y++)
+                {
+                    if (Math.Pow(x * 30 - xpos, 2) + Math.Pow(y * 30 - ypos, 2) < radio * radio)
+                    {
+                        core.map.grid[x, y] = "0";
+                        MyCanvas.Children.Remove(blocks[x, y]);
+                    }
+                }
+            }
         }
 
         private void MoveLeft(UserControlWorms worm)
         {
-
+            var canvasposleft = (double)worm.GetValue(Canvas.LeftProperty);
+            var canvaspostop = (double)worm.GetValue(Canvas.TopProperty) + 30.0;
+            try
+            {
+                if (core.map.grid[(int)((canvasposleft - 2) / 30), (int)Math.Ceiling(canvaspostop / 30)] != "1")
+                {
+                    var velocidad = 1000;
+                    worm.CanvasXPos = (double)worm.GetValue(Canvas.LeftProperty) - velocidad * 0.002;
+                    Canvas.SetLeft(worm, worm.CanvasXPos);
+                }
+            }
+            catch { }
+            Thread.Sleep(1);
+            worm.onAir = true;
         }
 
         private void MoveRight(UserControlWorms worm)
         {
+            var canvasposleft = (double)worm.GetValue(Canvas.LeftProperty);
+            var canvaspostop = (double)worm.GetValue(Canvas.TopProperty) + 30.0;
+            try
+            {
+                if (core.map.grid[(int)((canvasposleft + 30) / 30), (int)Math.Ceiling(canvaspostop / 30)] != "1")
+                {
+                    var velocidad = 1000;
+                    worm.CanvasXPos = (double)worm.GetValue(Canvas.LeftProperty) + velocidad * 0.002;
+                    Canvas.SetLeft(worm, worm.CanvasXPos);
+                }
+            }
+            catch { }
+            System.Threading.Thread.Sleep(1);
+            worm.onAir = true;
+        }
 
+        public void Victory()
+        {
+            foreach (UserControlWorms worm in worms)
+            {
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.UriSource = new Uri(@"D:\repos\Die_And_KILL\Die_And_Kill\Resources\winner.gif");
+                image.EndInit();
+                ImageBehavior.SetAnimatedSource(worm.icon, image);
+                TriggerUpdater.Stop();
+                this.KeyDown -= MainWindow_KeyDown;
+                bazookabtn.Click -= SelectBazooka;
+                bat.Click -= SelectBat;
+
+            }
         }
     }
 }
