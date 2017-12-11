@@ -1,0 +1,3 @@
+# Die_And_KILL
+
+War ... War never changes ... People no longer understand the value of the land. The earth is what is really important among this ruin and ruins that have been left after this worthless race. We are a new milestone in the history of this planet. We are the only force to be reckoned with on this earth. But even among us there are those who decide to choose a different path. The path of peace, the path of harmony ... Pitiful cockroaches !!!! They do not know that only power helps us to survive !!! We will not allow another's faith to subdue us. We are the only beings worthy of life !! Get your bazookas, brothers! Time to win!
